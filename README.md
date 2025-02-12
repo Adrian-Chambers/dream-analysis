@@ -1,48 +1,34 @@
-# Astro Starter Kit: Basics
+# Dream Journal & Interpretation
 
-```sh
-npm create astro@latest -- --template basics
-```
+An interactive dream journal that uses AI to analyze and interpret your dreams, identify patterns, and visualize recurring themes.
 
-[![Open in StackBlitz](https://developer.stackblitz.com/img/open_in_stackblitz.svg)](https://stackblitz.com/github/withastro/astro/tree/latest/examples/basics)
-[![Open with CodeSandbox](https://assets.codesandbox.io/github/button-edit-lime.svg)](https://codesandbox.io/p/sandbox/github/withastro/astro/tree/latest/examples/basics)
-[![Open in GitHub Codespaces](https://github.com/codespaces/badge.svg)](https://codespaces.new/withastro/astro?devcontainer_path=.devcontainer/basics/devcontainer.json)
+## Features
 
-> 🧑‍🚀 **Seasoned astronaut?** Delete this file. Have fun!
+- Log and track your dreams
+- AI-powered dream interpretation
+- Visual analysis of dream patterns and emotions
+- Theme extraction and symbolism insights
+- Date range filtering for analysis
 
-![just-the-basics](https://github.com/withastro/astro/assets/2244813/a0a5533c-a856-4198-8470-2d67b1d7c554)
+## Setup
 
-## 🚀 Project Structure
+1. Clone this repository
+2. Install dependencies: `npm install`
+3. Create a `.env` file with your OpenAI API key: `PUBLIC_OPENAI_API_KEY=your_key_here`
+4. Run locally: `npm run dev`
 
-Inside of your Astro project, you'll see the following folders and files:
+## How to Use
 
-```text
-/
-├── public/
-│   └── favicon.svg
-├── src/
-│   ├── layouts/
-│   │   └── Layout.astro
-│   └── pages/
-│       └── index.astro
-└── package.json
-```
+1. Log your dreams on the home page
+2. View your dream journal entries
+3. Explore the analysis page to see patterns and insights
+4. Filter analysis by date range to focus on specific periods
 
-To learn more about the folder structure of an Astro project, refer to [our guide on project structure](https://docs.astro.build/en/basics/project-structure/).
+## Technologies
 
-## 🧞 Commands
-
-All commands are run from the root of the project, from a terminal:
-
-| Command                   | Action                                           |
-| :------------------------ | :----------------------------------------------- |
-| `npm install`             | Installs dependencies                            |
-| `npm run dev`             | Starts local dev server at `localhost:4321`      |
-| `npm run build`           | Build your production site to `./dist/`          |
-| `npm run preview`         | Preview your build locally, before deploying     |
-| `npm run astro ...`       | Run CLI commands like `astro add`, `astro check` |
-| `npm run astro -- --help` | Get help using the Astro CLI                     |
-
-## 👀 Want to learn more?
-
-Feel free to check [our documentation](https://docs.astro.build) or jump into our [Discord server](https://astro.build/chat).
+- Astro
+- React
+- TypeScript
+- OpenAI API
+- Recharts for data visualization
+- Framer Motion for animations
