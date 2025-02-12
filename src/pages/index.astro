@@ -1,0 +1,36 @@
+---
+import MainLayout from '../layouts/MainLayout.astro';
+import { DreamForm } from '../components/DreamForm';
+import { TestComponent } from '../components/TestComponent';
+---
+
+<MainLayout title="Home">
+  <div class="hero">
+    <h1>Dream Journal & Interpretation</h1>
+    <p>Record your dreams and discover their hidden meanings through AI-powered analysis</p>
+  </div>
+  
+  <DreamForm client:load />
+</MainLayout>
+
+<style>
+  .hero {
+    text-align: center;
+    margin: 4rem 0;
+  }
+  
+  h1 {
+    font-size: 3rem;
+    background: linear-gradient(135deg, var(--accent-color), #c77dff);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    margin-bottom: 1rem;
+  }
+  
+  p {
+    font-size: 1.25rem;
+    max-width: 600px;
+    margin: 0 auto;
+    color: rgba(224, 224, 255, 0.9);
+  }
+</style>

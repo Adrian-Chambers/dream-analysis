@@ -1,0 +1,106 @@
+---
+import MainLayout from '../layouts/MainLayout.astro';
+import { DreamAnalysis } from '../components/DreamAnalysis';
+---
+
+<MainLayout title="Dream Analysis">
+  <div class="analysis-page">
+    <DreamAnalysis client:load />
+  </div>
+</MainLayout>
+
+<style>
+  .analysis-page {
+    max-width: 1000px;
+    margin: 0 auto;
+    padding: 2rem 1rem;
+  }
+  
+  /* Add these styles to global.css */
+  :global(.analysis-container) {
+    background: rgba(15, 15, 30, 0.7);
+    backdrop-filter: blur(10px);
+    border-radius: 1rem;
+    padding: 2rem;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+  }
+  
+  :global(.analysis-header) {
+    text-align: center;
+    margin-bottom: 2rem;
+  }
+  
+  :global(.analysis-header h2) {
+    font-size: 2rem;
+    background: linear-gradient(135deg, var(--accent-color), #c77dff);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    margin-bottom: 0.5rem;
+  }
+  
+  :global(.analysis-tabs) {
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+    margin-bottom: 2rem;
+  }
+  
+  :global(.analysis-tabs button) {
+    background: rgba(90, 24, 154, 0.3);
+    border: none;
+    border-radius: 2rem;
+    padding: 0.75rem 1.5rem;
+    color: var(--text-color);
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+  }
+  
+  :global(.analysis-tabs button.active) {
+    background: var(--accent-color);
+  }
+  
+  :global(.analysis-placeholder) {
+    text-align: center;
+    padding: 4rem 2rem;
+    background: rgba(15, 15, 30, 0.7);
+    backdrop-filter: blur(10px);
+    border-radius: 1rem;
+  }
+  
+  :global(.dream-icon) {
+    font-size: 4rem;
+    margin: 2rem 0;
+  }
+  
+  :global(.chart-container) {
+    margin-bottom: 2rem;
+  }
+  
+  :global(.chart-container h3) {
+    text-align: center;
+    margin-bottom: 1.5rem;
+    font-size: 1.5rem;
+    color: #c77dff;
+  }
+  
+  :global(.insight-box) {
+    background: rgba(90, 24, 154, 0.2);
+    padding: 1.5rem;
+    border-radius: 0.75rem;
+    margin-top: 2rem;
+  }
+  
+  :global(.insight-box h3) {
+    color: #c77dff;
+    margin-bottom: 1rem;
+  }
+  
+  :global(.insight-box ul) {
+    padding-left: 1.5rem;
+  }
+  
+  :global(.insight-box li) {
+    margin-bottom: 0.75rem;
+  }
+</style>

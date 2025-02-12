@@ -1,0 +1,286 @@
+---
+import MainLayout from '../../layouts/MainLayout.astro';
+
+// Handle all routes
+export const prerender = false;
+const { id } = Astro.params;
+---
+
+<MainLayout title="View Dream">
+  <div class="dream-viewer" id="dream-viewer" data-id={id}>
+    <div class="dream-container">
+      <a href="/journal" class="back-button">&larr; Back to Journal</a>
+      <div id="dream-content">
+        <div class="dream-loading">
+          <div class="loading-spinner"></div>
+          <p>Loading dream...</p>
+        </div>
+      </div>
+    </div>
+    <div class="dream-bg-animation"></div>
+  </div>
+</MainLayout>
+
+<script>
+  import { useDreamStore } from '../../stores/dreamStore';
+  import { format, parseISO } from 'date-fns';
+  
+  function loadDream() {
+    const dreamViewer = document.getElementById('dream-viewer');
+    const dreamId = dreamViewer?.getAttribute('data-id');
+    const dreamContentEl = document.getElementById('dream-content');
+    
+    if (!dreamId || !dreamContentEl) return;
+    
+    // Initialize Zustand store (on client-side)
+    const { dreams } = useDreamStore.getState();
+    const dream = dreams.find(d => d.id === dreamId);
+    
+    if (dream) {
+      // Format the dream date
+      const formattedDate = format(parseISO(dream.date), 'MMMM d, yyyy');
+      
+      // Create the dream content HTML
+      dreamContentEl.innerHTML = `
+        <div class="dream-header">
+          <h1>${dream.title}</h1>
+          <div class="dream-date">${formattedDate}</div>
+          ${dream.emotionalState ? `
+            <div class="emotion-badge ${dream.emotionalState}">
+              ${dream.emotionalState}
+            </div>
+          ` : ''}
+        </div>
+        
+        <div class="dream-body">
+          <h2>Dream Description</h2>
+          <p class="dream-description">${dream.description}</p>
+          
+          ${dream.tags && dream.tags.length > 0 ? `
+            <div class="dream-tags">
+              ${dream.tags.map(tag => `<span class="tag">${tag}</span>`).join('')}
+            </div>
+          ` : ''}
+          
+          ${dream.interpretation ? `
+            <div class="dream-interpretation">
+              <h2>Dream Interpretation</h2>
+              <div class="interpretation-content">
+                ${dream.interpretation.replace(/\n/g, '<br>')}
+              </div>
+            </div>
+          ` : ''}
+        </div>
+      `;
+      
+      // Initialize background animation
+      initBackgroundAnimation();
+    } else {
+      // Redirect to 404 page if dream not found
+      window.location.href = '/404';
+    }
+  }
+  
+  // Load dream on initial page load
+  document.addEventListener('DOMContentLoaded', loadDream);
+  
+  // Also load dream on Astro's view transition
+  document.addEventListener('astro:page-load', loadDream);
+  
+  function initBackgroundAnimation() {
+    const canvas = document.createElement('canvas');
+    canvas.className = 'dream-canvas';
+    const dreamBg = document.querySelector('.dream-bg-animation');
+    if (dreamBg) {
+      dreamBg.appendChild(canvas);
+      
+      const ctx = canvas.getContext('2d');
+      let width = canvas.width = window.innerWidth;
+      let height = canvas.height = window.innerHeight;
+      
+      // Particles settings
+      const particleCount = 100;
+      const particles = [];
+      
+      for (let i = 0; i < particleCount; i++) {
+        particles.push({
+          x: Math.random() * width,
+          y: Math.random() * height,
+          radius: Math.random() * 3 + 1,
+          color: `rgba(157, 78, 221, ${Math.random() * 0.5 + 0.1})`,
+          speedX: Math.random() * 1 - 0.5,
+          speedY: Math.random() * 1 - 0.5
+        });
+      }
+      
+      function animate() {
+        ctx.clearRect(0, 0, width, height);
+        
+        particles.forEach(p => {
+          // Move particles
+          p.x += p.speedX;
+          p.y += p.speedY;
+          
+          // Wrap around canvas
+          if (p.x < 0) p.x = width;
+          if (p.x > width) p.x = 0;
+          if (p.y < 0) p.y = height;
+          if (p.y > height) p.y = 0;
+          
+          // Draw particle
+          ctx.beginPath();
+          ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
+          ctx.fillStyle = p.color;
+          ctx.fill();
+        });
+        
+        requestAnimationFrame(animate);
+      }
+      
+      animate();
+      
+      // Handle resize
+      window.addEventListener('resize', () => {
+        width = canvas.width = window.innerWidth;
+        height = canvas.height = window.innerHeight;
+      });
+    }
+  }
+</script>
+
+<style>
+  .dream-viewer {
+    position: relative;
+    min-height: 100vh;
+  }
+  
+  .dream-container {
+    position: relative;
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 3rem 2rem;
+    background: rgba(15, 15, 30, 0.8);
+    backdrop-filter: blur(10px);
+    border-radius: 1rem;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+    z-index: 2;
+  }
+  
+  .back-button {
+    display: inline-block;
+    margin-bottom: 2rem;
+    color: var(--accent-color);
+    text-decoration: none;
+    font-weight: 500;
+    transition: all 0.3s ease;
+  }
+  
+  .back-button:hover {
+    transform: translateX(-5px);
+  }
+  
+  .dream-loading {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 300px;
+  }
+  
+  .loading-spinner {
+    width: 50px;
+    height: 50px;
+    border: 3px solid rgba(157, 78, 221, 0.3);
+    border-radius: 50%;
+    border-top-color: var(--accent-color);
+    animation: spin 1s linear infinite;
+    margin-bottom: 1rem;
+  }
+  
+  @keyframes spin {
+    to { transform: rotate(360deg); }
+  }
+  
+  .dream-header h1 {
+    font-size: 2.5rem;
+    margin-bottom: 0.5rem;
+    background: linear-gradient(135deg, var(--accent-color), #c77dff);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+  
+  .dream-date {
+    font-size: 1rem;
+    color: rgba(224, 224, 255, 0.7);
+    margin-bottom: 1rem;
+  }
+  
+  .dream-body h2 {
+    font-size: 1.75rem;
+    margin: 2rem 0 1rem;
+    color: var(--accent-color);
+  }
+  
+  .dream-description {
+    font-size: 1.125rem;
+    line-height: 1.8;
+    white-space: pre-wrap;
+  }
+  
+  .dream-tags {
+    margin: 2rem 0;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+  
+  .tag {
+    padding: 0.25rem 0.75rem;
+    background: rgba(157, 78, 221, 0.2);
+    border-radius: 20px;
+    font-size: 0.875rem;
+  }
+  
+  .dream-interpretation {
+    margin-top: 3rem;
+    padding: 2rem;
+    background: rgba(157, 78, 221, 0.1);
+    border-radius: 1rem;
+  }
+  
+  .interpretation-content {
+    font-size: 1.125rem;
+    line-height: 1.8;
+    font-style: italic;
+  }
+  
+  .emotion-badge {
+    display: inline-block;
+    margin-top: 1rem;
+    padding: 0.25rem 0.75rem;
+    border-radius: 20px;
+    font-size: 0.875rem;
+    font-weight: 500;
+  }
+  
+  .emotion-badge.joyful { background: rgba(52, 211, 153, 0.2); color: #34d399; }
+  .emotion-badge.anxious { background: rgba(251, 191, 36, 0.2); color: #fbbf24; }
+  .emotion-badge.fearful { background: rgba(239, 68, 68, 0.2); color: #ef4444; }
+  .emotion-badge.peaceful { background: rgba(96, 165, 250, 0.2); color: #60a5fa; }
+  .emotion-badge.confused { background: rgba(167, 139, 250, 0.2); color: #a78bfa; }
+  
+  .dream-bg-animation {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 1;
+  }
+  
+  .dream-canvas {
+    position: absolute;
+    top: 0;
+    left: 0;
+  }
+</style>
